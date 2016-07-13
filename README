@@ -1,0 +1,30 @@
+# configuration
+
+camera box:
+create a passwordless ssh <key>
+
+server:
+> ~/.ssh/authorized_keys
+command="/home/camera/aacam/dump",no-port-forwarding,no-x11-forwarding,no-agent-forwarding <key>
+
+> /etc/xinetd.d/telnet
+service telnet
+{
+    disable = no
+    flags = REUSE
+    socket_type = stream
+    wait = no
+    user = root
+    server = /home/camera/aacam/telnet
+    log_on_failure += USERID
+}
+
+# running
+
+camera box:
+$ ./capture_raw_frames -driver stdout /dev/video0 320x240 | ssh user@server
+
+client:
+$ telnet server
+
+enjoy!
