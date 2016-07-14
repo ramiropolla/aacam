@@ -45,6 +45,7 @@ static int              v4l2_width;
 static int              v4l2_height;
 
 static aa_context      *ctx;
+static aa_savedata      aa_save;
 static aa_renderparams *params;
 static float            xstep;
 static float            ystep;
@@ -84,6 +85,7 @@ static void process_image(const uint8_t *p, int size)
 			aa_putpixel(ctx, x, y, p[v4l2_index(x, y)]);
 	aa_render(ctx, params, 0, 0, aa_scrwidth(ctx), aa_scrheight(ctx));
 	aa_flush(ctx);
+	printf("\f");
 }
 
 static int read_frame(void)
@@ -393,10 +395,14 @@ int main(int argc, char **argv)
 		force_format = 1;
 	}
 
-	ctx = aa_autoinit(&aa_defparams);
+	aa_save.name = NULL;
+	aa_save.format = &aa_ansi_format;
+	aa_save.file = stdout;
+
+	ctx = aa_init(&save_d, &aa_defparams, &aa_save);
 	if (ctx == NULL)
 	{
-		fprintf(stderr, "aa_autoinit failed\n");
+		fprintf(stderr, "aa_init failed\n");
 		exit(EXIT_FAILURE);
 	}
 	params = aa_getrenderparams();
