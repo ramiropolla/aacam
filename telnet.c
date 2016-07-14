@@ -25,6 +25,7 @@ int main()
 	{
 		const char *const clear = "\033[H";
 		struct stat st;
+		size_t size = 0;
 		char *buf;
 		int fd;
 
@@ -36,7 +37,9 @@ int main()
 		fd = open(FNAME, O_RDONLY);
 		buf = malloc(st.st_size);
 		read(fd, buf, st.st_size);
-		write(1, buf, st.st_size);
+		while ( size < st.st_size && buf[size] != '\f' )
+			size++;
+		write(1, buf, size);
 		close(fd);
 		free(buf);
 		usleep(100000);

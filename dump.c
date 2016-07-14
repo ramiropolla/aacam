@@ -25,12 +25,6 @@ int main()
 		int c = getchar();
 		if ( c == EOF )
 			break;
-		else if ( c == '\f' )
-		{
-			flush(FNAME, buf, count);
-			count = 0;
-			continue;
-		}
 		count++;
 		if ( bufsize < count )
 		{
@@ -38,6 +32,12 @@ int main()
 			bufsize = count;
 		}
 		buf[count - 1] = c;
+		if ( c == '\f' )
+		{
+			flush(FNAME, buf, count);
+			count = 0;
+			continue;
+		}
 	}
 	flush(FNAME, buf, count);
 
